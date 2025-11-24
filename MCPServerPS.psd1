@@ -42,7 +42,6 @@ AliasesToExport = @()
 # HelpInfo URI of this module
 # HelpInfoURI = ''
 
-# Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
-# DefaultCommandPrefix = ''
+PrivateData = @{ PSData = @{ ProjectUri = 'https://github.com/daxian-dbw/MCPServerPS' } }
 
 }
