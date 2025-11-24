@@ -1,4 +1,4 @@
-# MyFirstMCP: PowerShell MCP Server Module
+# MCPServerPS: PowerShell MCP Server Module
 
 This project creates a PowerShell module that serves as a Model Context Protocol (MCP) server.
 The module exposes the `Start-MyMCP` cmdlet, which starts the MCP server and dynamically exposes tools based on how it is invoked.
@@ -17,10 +17,10 @@ The module exposes the `Start-MyMCP` cmdlet, which starts the MCP server and dyn
 To build the project, run:
 
 ```pwsh
-dotnet publish .\MyFirstMCP.csproj
+dotnet publish .\MCPServerPS.csproj
 ```
 
-The published module will be available at `.\out\MyFirstMCP`.
+The published module will be available at `.\out\MCPServerPS`.
 
 After deploying the module to your PowerShell module path, you can start the MCP server using the `Start-MyMCP` cmdlet.
 
@@ -47,20 +47,20 @@ Both script tools and module function tools use comment-based help to define the
 - Each script tool runs in its own dedicated Runspace, so they are isolated from each other.
 - Module function tools share the same Runspace for the module, allowing changes to module state made by one function tool to be visible to others. This is because module functions are considered related and may need to share state.
 
-## Using MyFirstMCP in VSCode
+## Using MCPServerPS in VSCode
 
 ### 1. Exposing C# MCP Tools
 
 ```json
 {
     "servers": {
-        "MyFirstMCP": {
+        "MCPServerPS": {
             "type": "stdio",
             "command": "pwsh",
             "args": [
                 "-noprofile",
                 "-c",
-                "MyFirstMCP\\Start-MyMCP"
+                "MCPServerPS\\Start-MyMCP"
             ]
         }
     },
@@ -70,18 +70,18 @@ Both script tools and module function tools use comment-based help to define the
 
 ### 2. Exposing PowerShell Script Tools
 
-Assume the local repo root is at `E:\repos\MyFirstMCP`.
+Assume the local repo root is at `E:\repos\MCPServerPS`.
 
 ```json
 {
     "servers": {
-        "MyFirstMCP": {
+        "MCPServerPS": {
             "type": "stdio",
             "command": "pwsh",
             "args": [
                 "-noprofile",
                 "-c",
-                "MyFirstMCP\\Start-MyMCP -ScriptRoot E:\\repos\\MyFirstMCP\\scripts"
+                "MCPServerPS\\Start-MyMCP -ScriptRoot E:\\repos\\MCPServerPS\\scripts"
             ]
         }
     },
@@ -91,18 +91,18 @@ Assume the local repo root is at `E:\repos\MyFirstMCP`.
 
 ### 3. Exposing Module Function Tools
 
-Assume the local repo root is at `E:\repos\MyFirstMCP`.
+Assume the local repo root is at `E:\repos\MCPServerPS`.
 
 ```json
 {
     "servers": {
-        "MyFirstMCP": {
+        "MCPServerPS": {
             "type": "stdio",
             "command": "pwsh",
             "args": [
                 "-noprofile",
                 "-c",
-                "MyFirstMCP\\Start-MyMCP -Module E:\\repos\\MyFirstMCP\\scripts\\tools.psm1"
+                "MCPServerPS\\Start-MyMCP -Module E:\\repos\\MCPServerPS\\scripts\\tools.psm1"
             ]
         }
     },
@@ -137,5 +137,5 @@ Register-PSResourceRepository -name dongbo -uri https://nuget.pkg.github.com/dax
 ```
 
 ```powershell
-install-psresource myfirstmcp
+Install-PSResource MCPServerPS
 ```

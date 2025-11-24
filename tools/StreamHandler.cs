@@ -2,7 +2,7 @@ using System.Management.Automation;
 using System.Text;
 using Microsoft.Extensions.Logging;
 
-namespace MyFirstMCP.Tools;
+namespace MCPServerPS.Tools;
 
 internal class StreamHandler
 {

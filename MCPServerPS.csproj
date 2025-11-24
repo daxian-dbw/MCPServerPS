@@ -10,7 +10,7 @@
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
 
     <!-- Deploy the produced assembly -->
-    <PublishDir>out\MyFirstMCP</PublishDir>
+    <PublishDir>out\MCPServerPS</PublishDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
     <PackageReference Include="ModelContextProtocol" Version="0.3.0-preview.4" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
 
-    <Content Include="MyFirstMCP.psd1">
+    <Content Include="MCPServerPS.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

@@ -6,7 +6,7 @@ using ModelContextProtocol.Server;
 using System.Collections.ObjectModel;
 using Microsoft.Extensions.Logging;
 
-namespace MyFirstMCP.Tools;
+namespace MCPServerPS.Tools;
 
 /// <summary>
 /// Function tools from a module share the same Runspace, so that the changes to the module state by a function tool can be seen by other function tools.

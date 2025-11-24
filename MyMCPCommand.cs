@@ -4,10 +4,10 @@ using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 using System.Management.Automation;
-using MyFirstMCP.Tools;
+using MCPServerPS.Tools;
 using System.Reflection.Metadata;
 
-namespace MyFirstMCP;
+namespace MCPServerPS;
 
 [Cmdlet(VerbsLifecycle.Start, "MyMCP", DefaultParameterSetName = "Default")]
 public class MyMCPCommand : PSCmdlet
