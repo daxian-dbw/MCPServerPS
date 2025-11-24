@@ -1,4 +1,4 @@
-# MCPServerPS: PowerShell MCP Server Module
+# MCPServerPS
 
 This project creates a PowerShell module that serves as a Model Context Protocol (MCP) server.
 The module exposes the `Start-MyMCP` cmdlet, which starts the MCP server and dynamically exposes tools based on how it is invoked.
