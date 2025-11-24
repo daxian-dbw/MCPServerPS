@@ -124,18 +124,24 @@ Assume the local repo root is at `E:\repos\MCPServerPS`.
 Create a [Personal Access Token (Classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) with `package:read` permission. At the time of writing, this is the only type of token that allows these premissions.
 
 ```powershell
+## The command should prompt for the secret.
 Set-Secret -Name GitHubPackageRead
 ```
 
-The command should prompt for the secret.
-
 Register the Repository.
-This assumes you called you vault default as described in the prerequisites.
+This assumes you called you vault `default` as described in the prerequisites.
 
 ```powershell
-Register-PSResourceRepository -name dongbo -uri https://nuget.pkg.github.com/daxian-dbw/index.json -ApiVersion V3 -CredentialInfo @{VaultName='default';SecretName='GitHubPackageRead'}
+Register-PSResourceRepository `
+    -name daxian-dbw `
+    -uri https://nuget.pkg.github.com/daxian-dbw/index.json `
+    -ApiVersion V3 `
+    -CredentialInfo @{ VaultName='default'; SecretName='GitHubPackageRead' } `
+    -Trusted
 ```
 
+Then, you can install the module:
+
 ```powershell
-Install-PSResource MCPServerPS
+Install-PSResource -Name MCPServerPS -Repository daxian-dbw
 ```
