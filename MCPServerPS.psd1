@@ -1,7 +1,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'MyFirstMCP.dll'
+RootModule = 'MCPServerPS.dll'
 
 # Version number of this module.
 ModuleVersion = '0.0.1'
@@ -22,7 +22,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) dongbow. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = "My First MCP Server"
+Description = "PowerShell module that hosts a Model Context Protocol (MCP) server to expose C#, script, and module tools as MCP endpoints."
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '7.4'

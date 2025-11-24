@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
-namespace MyFirstMCP.Tools;
+namespace MCPServerPS.Tools;
 
 public class PSScriptMcpServerTool : McpServerTool
 {

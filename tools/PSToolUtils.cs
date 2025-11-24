@@ -8,7 +8,7 @@ using System.Reflection;
 using Microsoft.Extensions.AI;
 using ModelContextProtocol.Protocol;
 
-namespace MyFirstMCP.Tools;
+namespace MCPServerPS.Tools;
 
 internal class PSToolUtils
 {

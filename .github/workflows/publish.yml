@@ -23,10 +23,10 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore MyFirstMCP.csproj
+      run: dotnet restore MCPServerPS.csproj
 
     - name: Build and publish module
-      run: dotnet publish MyFirstMCP.csproj --no-restore --configuration Release
+      run: dotnet publish MCPServerPS.csproj --no-restore --configuration Release
 
     - name: Publish PowerShell Module to GitHub Packages
       shell: pwsh
@@ -41,11 +41,11 @@ jobs:
         Register-PSResourceRepository @repoParams
 
         # Publish the module to GitHub Packages
-        Publish-PSResource -Path ./out/MyFirstMCP -Repository GitHubPackages -ApiKey ${{ secrets.GITHUB_TOKEN }} -Verbose
+        Publish-PSResource -Path ./out/MCPServerPS -Repository GitHubPackages -ApiKey ${{ secrets.GITHUB_TOKEN }} -Verbose
 
     - name: Upload module artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MyFirstMCP-Module
-        path: out/MyFirstMCP/
+        name: MCPServerPS-Module
+        path: out/MCPServerPS/
         retention-days: 90

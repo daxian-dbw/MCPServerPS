@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
-namespace MyFirstMCP.Tools;
+namespace MCPServerPS.Tools;
 
 [McpServerToolType]
 public sealed class PowerShellTools
