@@ -114,14 +114,15 @@ Assume the local repo root is at `E:\repos\MCPServerPS`.
 
 ### Prerequisites
 
-1. PSResourceGet installed.
-2. A SecretStore created called `default`
+1. The `PSResourceGet` module is installed.
+2. A `SecretVault` is created called `default`.
 
 ### Instructions
 
-#### Setup a PAT to read the feed.  
+#### Setup a PAT to read the feed.
 
-Create a [Personal Access Token (Classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) with `package:read` permission. At the time of writing, this is the only type of token that allows these premissions.
+Create a [Personal Access Token (Classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) with `package:read` permission.
+At the time of writing, this is the only type of token that allows these premissions.
 
 ```powershell
 ## The command should prompt for the secret.
