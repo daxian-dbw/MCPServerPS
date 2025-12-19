@@ -201,7 +201,7 @@ internal class PSToolUtils
             return false;
         }
 
-        return typeof(PSScriptMcpServerTool)
+        return typeof(PSToolUtils)
             .GetMethod(nameof(GetDefaultValueGeneric), BindingFlags.NonPublic | BindingFlags.Static)
             .MakeGenericMethod(paramType)
             .Invoke(null, null);
