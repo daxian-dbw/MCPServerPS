@@ -91,7 +91,7 @@ public class PSScriptMcpServerTool : McpServerTool
         string json = _pwsh
             .AddCommand("ConvertTo-Json")
             .AddParameter("InputObject", input)
-            .AddParameter("Depth", 5)
+            .AddParameter("Depth", 1)
             .AddParameter("EnumsAsStrings", true)
             .AddParameter("Compress", true)
             .ExecuteAndReturnString(errorTemplate: string.Empty);
