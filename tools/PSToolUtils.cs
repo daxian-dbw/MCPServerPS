@@ -183,7 +183,10 @@ internal class PSToolUtils
         var paramAst = parameters?.FirstOrDefault(pAst => pAst.Name.VariablePath.UserPath == paramName);
         if (paramAst is { } && paramAst.DefaultValue is ConstantExpressionAst constantAst)
         {
-            return constantAst.Value;
+            object value = constantAst.Value;
+            return value.GetType() == paramType
+                ? value
+                : LanguagePrimitives.ConvertTo(value, paramType);
         }
 
         if (paramType == typeof(string))
