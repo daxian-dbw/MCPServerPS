@@ -126,53 +126,13 @@ This section addresses critical design questions and documents the decisions mad
 
 **Question**: Should `Start-MyMCP -Module` accept multiple modules simultaneously?
 
-**Decision**: Extend `-Module` parameter to accept `string[]` (array of module names or paths).
+**Decision**: Spin up one `MCPServerPS` instance per module rather than aggregating multiple modules into a single server.
 
-**Implementation Details**:
+**Rationale:**
 
-1. **Parameter Type**:
-   ```powershell
-   -Module <string[]>
-   ```
-
-2. **Behavior**:
-   - Load and expose tools from all specified modules
-   - Tools from different modules are aggregated into a single tool set
-
-3. **Tool Filtering Parameters** (new):
-   - `-IncludeTools <string[]>`: Whitelist of specific function names to expose
-   - `-ExcludeTools <string[]>`: Blacklist of function names to exclude
-   - Both support wildcards (e.g., `Get-*`, `*-Config`)
-
-4. **Collision Handling**:
-   - Optional `-UsePrefix` parameter to namespace tools (e.g., `ModuleName_FunctionName`)
-   - Without prefix: last module wins on name collision, with warning emitted
-   - With prefix: tools are automatically namespaced to avoid collisions
-
-5. **Safety Safeguards**:
-   - `-MaxTools <int>` parameter to limit total exposed tools (default: 50)
-   - Prevents accidental exposure of very large tool sets
-   - Configurable/overrideable by user
-
-**Example Usage**:
-```powershell
-# Expose tools from multiple modules
-Start-MyMCP -Module @('Module1', 'Module2', 'Module3')
-
-# With filtering
-Start-MyMCP -Module @('Module1', 'Module2') -IncludeTools @('Get-*', 'Set-Config')
-
-# With namespacing
-Start-MyMCP -Module @('Module1', 'Module2') -UsePrefix
-
-# With custom limit
-Start-MyMCP -Module @('LargeModule1', 'LargeModule2') -MaxTools 100
-```
-
-**Rationale**:
-- Users may need tools from multiple specialized modules
-- Provides flexibility while maintaining safety through filtering and limits
-- Addresses the "too many tools" concern with explicit controls
+- Discoverability: Each server can be given a name that reflects the domain of its tools, making it easier for the agent to select the right server for a task.
+- Manageability: Users can start, stop, or update individual servers independently without affecting others.
+- Reliability: Each server is simpler. It owns exactly one module's tools, which reduces the blast radius of failures.
 
 ### 4.3 MCP Tool Hints Declaration
 
@@ -238,4 +198,47 @@ function Add-Number {
 ### 4.4 Future Considerations
 
 - If we integrate AIShell into PowerShell, making PowerShell an MCP client, then how to detect MCP server tool modules on user's machine?
+  - Find modules with the tag `MCPTools` from the module path.
+  - Maybe expose cmdlets for users to search and inspect such modules.
+
 - If there are lots of MCP tool modules, maybe we need a tool to tell the agent what tools to use for a specific task.
+
+### 4.5 Remote MCP Endpoint Support
+
+Technically, `MCPServerPS` can be used as a remote MCP server, reachable over the network by MCP clients that speak HTTP-based transports.
+All we need will be a lightweight **stdio bridge** component that wraps the local `MCPServerPS` process and exposes it as a remote MCP endpoint.
+
+#### Architecture
+
+```
+MCP Client (remote)
+      |
+      |  HTTP  (Streamable HTTP or SSE transport)
+      v
++---------------------+
+|   stdio Bridge      |  ← new component
+|  (HTTP listener)    |
++---------------------+
+      |
+      |  stdin / stdout (stdio transport)
+      v
++---------------------+
+|  pwsh.exe           |
+|  Start-MyMCP ...    |  ← unchanged MCPServerPS module
++---------------------+
+```
+
+#### How It Works
+
+1. The bridge starts a `pwsh.exe` process running `Start-MyMCP` (with whichever parameters the user chooses) and holds its `stdin`/`stdout` pipes.
+2. The bridge listens on a configurable HTTP port and implements the MCP [Streamable HTTP transport](https://spec.modelcontextprotocol.io/specification/2025-03-26/basic/transports/#streamable-http).
+3. For each incoming MCP JSON-RPC message from the remote client, the bridge writes it to the process's `stdin`.
+4. It reads JSON-RPC responses/notifications from `stdout` and streams them back to the remote client.
+5. The `MCPServerPS` module is completely unaware of the network layer. It only ever sees stdio.
+
+#### Bridge Implementation Options
+
+| Option | Notes |
+|---|---|
+| Write a .NET tool (`mcpbridge`) | Small, cross-platform, ships separately from MCPServerPS |
+| Third-party proxy (e.g., [mcp-proxy](https://github.com/sparfenyuk/mcp-proxy), [Supergateway](https://github.com/supercorp-ai/supergateway)) | Zero new code, but requires external dependency |
