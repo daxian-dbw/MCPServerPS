@@ -110,6 +110,15 @@ Assume the local repo root is at `E:\repos\MCPServerPS`.
 }
 ```
 
+## Install from PowerShell Gallery
+
+The `MCPServerPS` module requires PowerShell 7.4 or higher.
+To install it, run the following command:
+
+```pwsh
+Install-PSResource -Name MCPServerPS -Repository PSGallery
+```
+
 ## Installing latest version from main
 
 ### Prerequisites
