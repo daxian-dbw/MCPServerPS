@@ -74,7 +74,7 @@ jobs:
         inputs.publish_target == 'release' ||
         inputs.publish_target == 'both'
       run: |
-        zip -r out/MCPServerPS-${{ env.RELEASE_TAG }}.zip out/MCPServerPS/
+        cd out/MCPServerPS && zip -r ../MCPServerPS-${{ env.RELEASE_TAG }}.zip .
 
     - name: Create or upload GitHub Release
       if: >
