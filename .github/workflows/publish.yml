@@ -85,7 +85,8 @@ jobs:
           gh release create ${{ env.RELEASE_TAG }} \
             out/MCPServerPS-${{ env.RELEASE_TAG }}.zip \
             --title "MCPServerPS ${{ env.RELEASE_TAG }}" \
-            --generate-notes
+            --generate-notes \
+            --draft
         fi
 
     - name: Upload module artifact
