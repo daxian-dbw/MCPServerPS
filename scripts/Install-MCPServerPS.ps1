@@ -58,10 +58,12 @@ $credential  = [pscredential]::new('gh-token', $secureToken)
 
 if (get-module -Name $ModuleName -ListAvailable -erroraction SilentlyContinue)
 {
-    Write-Verbose -Verbose -Message "Installing $ModuleName from $RepositoryName"
-    Install-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential
+    # Update the module if it is already installed
+    Write-Verbose -Verbose -Message "Updating $ModuleName from $RepositoryName"
+    Update-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential
 }
 else {
-    Write-Verbose -Verbose -Message "Updating $ModuleName from $RepositoryName"
-    Update-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential    
+    # Install the module if it is not already installed
+    Write-Verbose -Verbose -Message "Installing $ModuleName from $RepositoryName"
+    Install-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential    
 }
