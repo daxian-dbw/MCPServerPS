@@ -14,9 +14,6 @@ on:
           - package
           - release
           - both
-      tag:
-        description: 'Release tag (e.g. v1.2.3) — required when publishing a release via workflow_dispatch'
-        required: false
 
 permissions:
   contents: write
@@ -27,11 +24,19 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      RELEASE_TAG: ${{ github.event_name == 'release' && github.ref_name || inputs.tag }}
+      RELEASE_TAG: ${{ github.event_name == 'release' && github.ref_name || '' }}
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Get module version from psd1
+      if: github.event_name != 'release'
+      shell: pwsh
+      run: |
+        $manifest = Import-PowerShellDataFile ./MCPServerPS.psd1
+        $tag = "v$($manifest.ModuleVersion)"
+        echo "RELEASE_TAG=$tag" >> $env:GITHUB_ENV
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
