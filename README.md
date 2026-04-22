@@ -119,6 +119,24 @@ To install it, run the following command:
 Install-PSResource -Name MCPServerPS -Repository PSGallery
 ```
 
+## Install from GitHub Release
+
+Download the latest release zip using the `gh` CLI, then extract it to your PowerShell module path.
+
+```pwsh
+# Download the latest release zip
+gh release download --repo daxian-dbw/MCPServerPS --pattern "MCPServerPS-*.zip" --output MCPServerPS.zip --clobber
+
+# Extract to your PowerShell module path (adjust destination as needed)
+Expand-Archive -Path MCPServerPS.zip -DestinationPath "$HOME\Documents\PowerShell\Modules" -Force
+```
+
+After extracting, verify the module is available:
+
+```pwsh
+Get-Module -ListAvailable MCPServerPS
+```
+
 ## Installing latest version from main
 
 ### Prerequisites
