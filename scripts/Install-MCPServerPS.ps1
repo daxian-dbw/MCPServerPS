@@ -42,16 +42,28 @@ if ($activeSection -notmatch 'read:packages') {
     Write-Host 'Token updated successfully.' -ForegroundColor Green
 }
 
+# --- Ensure the PSResource repository is registered ---
+# GitHub Packages NuGet feed URL is derived from the org/user name.
+$repoUri = "https://nuget.pkg.github.com/$RepositoryName/index.json"
+
+$existingRepo = Get-PSResourceRepository -Name $RepositoryName -ErrorAction SilentlyContinue
+if (-not $existingRepo) {
+    Write-Verbose -Verbose -Message "Registering PSResource repository '$RepositoryName' at '$repoUri' (Trusted=True, Priority=100)"
+    Register-PSResourceRepository -Name $RepositoryName -Uri $repoUri -Trusted -Priority 100
+}
+
 # --- Build credential and query the repository ---
 $secureToken = gh auth token | ConvertTo-SecureString -AsPlainText -Force
 $credential  = [pscredential]::new('gh-token', $secureToken)
 
 if (get-module -Name $ModuleName -ListAvailable -erroraction SilentlyContinue)
 {
-    Write-Verbose -Verbose -Message "Installing $ModuleName from $RepositoryName"
-    Install-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential
+    # Update the module if it is already installed
+    Write-Verbose -Verbose -Message "Updating $ModuleName from $RepositoryName"
+    Update-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential
 }
 else {
-    Write-Verbose -Verbose -Message "Updating $ModuleName from $RepositoryName"
-    Update-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential    
+    # Install the module if it is not already installed
+    Write-Verbose -Verbose -Message "Installing $ModuleName from $RepositoryName"
+    Install-PSResource -Repository $RepositoryName -Name $ModuleName -Credential $credential    
 }
