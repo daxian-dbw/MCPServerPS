@@ -33,16 +33,16 @@ function Add-Number {
 <#
 .SYNOPSIS
 
-Retrieves merged pull requests from the PowerShell repository that are marked for backport consideration to a specific target release.
+Retrieves merged pull requests from the PowerShell repository that are marked for backport approved to a specific target release.
 
 .DESCRIPTION
 
-This script queries the PowerShell GitHub repository to find merged pull requests that have been labeled for backport consideration to a specified target release version. It uses the GitHub CLI to fetch PR information including number, title, URL, and merge date, then sorts the results from oldest to newest based on merge date.
+This script queries the PowerShell GitHub repository to find merged pull requests that have been labeled for backport approved to a specified target release version. It uses the GitHub CLI to fetch PR information including number, title, URL, and merge date, then sorts the results from oldest to newest based on merge date.
 
-The script targets PRs with labels in the format "Backport-{TargetRelease}.x-Consider" where TargetRelease is the specified version.
+The script targets PRs with labels in the format "Backport-{TargetRelease}.x-Approved" where TargetRelease is the specified version.
 
 .PARAMETER TargetRelease
-The target PowerShell release version to check for backport consideration. Must be one of: '7.4', '7.5', or '7.6'.
+The target PowerShell release version to check for backport approved PRs. Must be one of: '7.4', '7.5', or '7.6'.
 This parameter is mandatory and determines which backport label to search for.
 
 .OUTPUTS
@@ -62,11 +62,11 @@ function get_prs_with_backport_label {
 
     $Owner = "PowerShell"
     $Repo = "PowerShell"
-    $considerLabel = "Backport-$TargetRelease.x-Consider"
+    $approvalLabel = "Backport-$TargetRelease.x-Approved"
 
     Write-Verbose "Target Release: $TargetRelease" -Verbose
 
-    $prsJson = gh pr list --repo "$Owner/$Repo" --label $considerLabel --state merged --json number,title,url,mergedAt --limit 100 2>&1
+    $prsJson = gh pr list --repo "$Owner/$Repo" --label $approvalLabel --state merged --json number,title,url,mergedAt --limit 100 2>&1
     $prs = $prsJson | ConvertFrom-Json
 
     Write-Debug "Result count: $($prs.Length)" -Debug
