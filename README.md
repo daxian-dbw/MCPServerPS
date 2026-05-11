@@ -17,7 +17,7 @@ The module exposes the `Start-MyMCP` cmdlet, which starts the MCP server and dyn
 To build the project, run:
 
 ```pwsh
-dotnet publish .\MCPServerPS.csproj
+dotnet publish .\src\MCPServerPS.csproj
 ```
 
 The published module will be available at `.\out\MCPServerPS`.
@@ -137,7 +137,7 @@ After extracting, verify the module is available:
 Get-Module -ListAvailable MCPServerPS
 ```
 
-## Installing latest version from main
+## Install from GitHub NuGet Feed
 
 ### Prerequisites
 

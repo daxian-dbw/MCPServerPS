@@ -10,7 +10,7 @@
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
 
     <!-- Deploy the produced assembly -->
-    <PublishDir>out\MCPServerPS</PublishDir>
+    <PublishDir>..\out\MCPServerPS</PublishDir>
   </PropertyGroup>
 
   <ItemGroup>
