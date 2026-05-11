@@ -1,6 +1,6 @@
 *.sln
-bin/*
-obj/*
+**/bin/*
+**/obj/*
 out/*
 .vscode/*
 nupkg/*

@@ -44,10 +44,10 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore MCPServerPS.csproj
+      run: dotnet restore .\src\MCPServerPS.csproj
 
     - name: Build and publish module
-      run: dotnet publish MCPServerPS.csproj --no-restore --configuration Release
+      run: dotnet publish .\src\MCPServerPS.csproj --no-restore --configuration Release
 
     - name: Publish PowerShell Module to GitHub Packages
       if: >
