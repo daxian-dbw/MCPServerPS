@@ -140,7 +140,7 @@ public class ModuleToolsMetadata
                     }
                 }
 
-                return _pwsh.Execute();
+                return _pwsh.ExecuteWithoutStdIn();
             }
             finally
             {

@@ -1,6 +1,7 @@
 using ModelContextProtocol.Server;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
@@ -61,6 +62,8 @@ public sealed class PowerShellTools
 
 internal static class PowerShellExt
 {
+    private static readonly object s_stdInLock = new();
+
     public static string ExecuteAndReturnString(this PowerShell pwsh, string errorTemplate)
     {
         try
@@ -104,6 +107,23 @@ internal static class PowerShellExt
         {
             pwsh.Commands.Clear();
             pwsh.Streams.ClearStreams();
+        }
+    }
+
+    public static Collection<PSObject> ExecuteWithoutStdIn(this PowerShell pwsh)
+    {
+        lock (s_stdInLock)
+        {
+            TextReader originalInput = Console.In;
+            Console.SetIn(TextReader.Null);
+            try
+            {
+                return pwsh.Execute();
+            }
+            finally
+            {
+                Console.SetIn(originalInput);
+            }
         }
     }
 }

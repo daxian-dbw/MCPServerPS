@@ -62,7 +62,7 @@ public class PSScriptMcpServerTool : McpServerTool
         try
         {
             streamHandler.RegisterStreamEvents(_pwsh);
-            Collection<PSObject> results = _pwsh.Execute();
+            Collection<PSObject> results = _pwsh.ExecuteWithoutStdIn();
             return ValueTask.FromResult(GetCallToolResult(results));
         }
         catch (Exception e)
