@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Management.Automation;
 using MCPServerPS.Tools;
 using System.Reflection.Metadata;
+using System.Reflection;
 
 namespace MCPServerPS;
 
@@ -24,11 +25,26 @@ public class MyMCPCommand : PSCmdlet
 
     protected override void ProcessRecord()
     {
+        MarkPowerShellAsRunningInServerSide();
         Task mcpTask = Task.Run(async () => await StartMCPServer(ParameterSetName, ScriptRoot ?? Module));
         mcpTask.GetAwaiter().GetResult();
     }
 
-    static async Task StartMCPServer(string parameterSet, string scriptRootOrModule)
+    /// <summary>
+    /// Set the internal static property "IsServerSide" of PowerShell to true. This is a workaround to allow
+    /// pwsh to behave as if it's running in a server-side context, so when starting a CLI command, it will
+    /// redirect the stdin, stdout, and stderr of the CLI command to prevent it from messing with the MCP
+    /// communication. Without this, some CLI commands will hang when running in a script/function tool.
+    /// </summary>
+    private static void MarkPowerShellAsRunningInServerSide()
+    {
+        Assembly assembly = typeof(PSObject).Assembly;
+        Type type = assembly.GetType("System.Management.Automation.NativeCommandProcessor");
+        PropertyInfo property = type.GetProperty("IsServerSide", BindingFlags.Static | BindingFlags.NonPublic);
+        property.SetValue(null, true);
+    }
+
+    private static async Task StartMCPServer(string parameterSet, string scriptRootOrModule)
     {
         var builder = Microsoft.Extensions.Hosting.Host.CreateApplicationBuilder([]);
         builder.Logging.AddConsole(consoleLogOptions =>
