@@ -34,7 +34,7 @@ jobs:
       if: github.event_name != 'release'
       shell: pwsh
       run: |
-        $manifest = Import-PowerShellDataFile ./MCPServerPS.psd1
+        $manifest = Import-PowerShellDataFile ./src/MCPServerPS.psd1
         $tag = "v$($manifest.ModuleVersion)"
         echo "RELEASE_TAG=$tag" >> $env:GITHUB_ENV
 
@@ -44,10 +44,10 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore .\src\MCPServerPS.csproj
+      run: dotnet restore ./src/MCPServerPS.csproj
 
     - name: Build and publish module
-      run: dotnet publish .\src\MCPServerPS.csproj --no-restore --configuration Release
+      run: dotnet publish ./src/MCPServerPS.csproj --no-restore --configuration Release
 
     - name: Publish PowerShell Module to GitHub Packages
       if: >
