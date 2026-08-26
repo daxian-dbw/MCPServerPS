@@ -6,12 +6,20 @@ namespace MCPServerPS.Tools;
 
 internal class StreamHandler
 {
+    // MCP logging notifications are deprecated (SEP-2577); forward PowerShell stream output to stderr instead.
+    // Trace is the lowest level, so every log gets routed to stderr instead of being split across stdout/stderr.
+    private static readonly ILoggerFactory s_loggerFactory = LoggerFactory.Create(builder => builder
+        .SetMinimumLevel(LogLevel.Trace)
+        .AddConsole(options => options.LogToStandardErrorThreshold = LogLevel.Trace));
+
     private readonly ILogger _logger;
 
     internal StreamHandler(ILogger logger)
     {
         _logger = logger;
     }
+
+    internal static ILogger CreateLogger(string categoryName) => s_loggerFactory.CreateLogger(categoryName);
 
     public void DebugDataAdding(object sender, DataAddingEventArgs e)
     {

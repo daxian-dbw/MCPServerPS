@@ -26,24 +26,29 @@ MCPServerPS is a PowerShell module that serves as a Model Context Protocol (MCP)
 The `Start-MyMCP` cmdlet is the primary interface for starting the MCP server. It supports three parameter sets:
 
 ```powershell
-Start-MyMCP [<CommonParameters>]
-Start-MyMCP -ScriptRoot <string> [<CommonParameters>]
-Start-MyMCP -Module <string> [<CommonParameters>]
+Start-MyMCP -Name <string> [<CommonParameters>]
+Start-MyMCP -Name <string> -ScriptRoot <string> [<CommonParameters>]
+Start-MyMCP -Name <string> -Module <string> [<CommonParameters>]
 ```
 
 #### Parameter Set Behaviors
 
-1. **Default (No Parameters)**
+0. **Name Parameter (mandatory, all parameter sets)**
+   - Syntax: `-Name <string>`
+   - Sets the MCP `serverInfo.name` the server reports during the `initialize` handshake
+   - MCP clients (e.g. VS Code) prefer this self-reported name over the `mcp.json` config key for tool grouping and tool-name prefixing, so give each configured instance of this module a distinct `-Name` to keep them distinguishable
+
+1. **Default (No Additional Parameters)**
    - Exposes all MCP tools defined in the C# code of the MCPServerPS assembly
    - Suitable for using built-in tools
 
 2. **ScriptRoot Parameter**
-   - Syntax: `Start-MyMCP -ScriptRoot <path-to-directory>`
+   - Syntax: `Start-MyMCP -Name <name> -ScriptRoot <path-to-directory>`
    - Exposes each `.ps1` script file in the specified directory as an MCP tool
    - Each script becomes a separate tool with metadata derived from comment-based help
 
 3. **Module Parameter**
-   - Syntax: `Start-MyMCP -Module <module-name-or-path-to-module>`
+   - Syntax: `Start-MyMCP -Name <name> -Module <module-name-or-path-to-module>`
    - Exposes each exported function within the specified module as an MCP tool
    - Functions use comment-based help for tool metadata
 
