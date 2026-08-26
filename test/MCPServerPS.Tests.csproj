@@ -26,6 +26,7 @@
   <ItemGroup>
     <None Include="Unit\Fixtures\**" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Component\Fixtures\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="E2E\Fixtures\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
