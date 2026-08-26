@@ -29,14 +29,15 @@ After deploying the module to your PowerShell module path, you can start the MCP
 The `Start-MyMCP` cmdlet supports three parameter sets:
 
 ```
-Start-MyMCP [<CommonParameters>]
-Start-MyMCP -ScriptRoot <string> [<CommonParameters>]
-Start-MyMCP -Module <string> [<CommonParameters>]
+Start-MyMCP -Name <string> [<CommonParameters>]
+Start-MyMCP -Name <string> -ScriptRoot <string> [<CommonParameters>]
+Start-MyMCP -Name <string> -Module <string> [<CommonParameters>]
 ```
 
-- **Default**: `Start-MyMCP` exposes all MCP tools defined in the C# code of this assembly.
-- **ScriptRoot**: `Start-MyMCP -ScriptRoot <path-to-directory>` exposes each `.ps1` script file in the specified directory as an MCP tool.
-- **Module**: `Start-MyMCP -Module <module-name-or-path-to-module>` exposes each function within the specified module as an MCP tool.
+- **Name** (mandatory, all parameter sets): the name the server reports as its MCP `serverInfo.name`. Since MCP clients (e.g. VS Code) prefer this self-reported name over the `mcp.json` config key for tool grouping/naming, use a distinct `-Name` per configured instance so multiple instances of this module remain distinguishable.
+- **Default**: `Start-MyMCP -Name <name>` exposes all MCP tools defined in the C# code of this assembly.
+- **ScriptRoot**: `Start-MyMCP -Name <name> -ScriptRoot <path-to-directory>` exposes each `.ps1` script file in the specified directory as an MCP tool.
+- **Module**: `Start-MyMCP -Name <name> -Module <module-name-or-path-to-module>` exposes each function within the specified module as an MCP tool.
 
 Examples of script tools and module function tools can be found in the `./scripts` folder.
 
@@ -60,7 +61,7 @@ Both script tools and module function tools use comment-based help to define the
             "args": [
                 "-noprofile",
                 "-c",
-                "MCPServerPS\\Start-MyMCP"
+                "MCPServerPS\\Start-MyMCP -Name MCPServerPS"
             ]
         }
     },
@@ -81,7 +82,7 @@ Assume the local repo root is at `E:\repos\MCPServerPS`.
             "args": [
                 "-noprofile",
                 "-c",
-                "MCPServerPS\\Start-MyMCP -ScriptRoot E:\\repos\\MCPServerPS\\scripts"
+                "MCPServerPS\\Start-MyMCP -Name MCPServerPS -ScriptRoot E:\\repos\\MCPServerPS\\scripts"
             ]
         }
     },
@@ -102,7 +103,7 @@ Assume the local repo root is at `E:\repos\MCPServerPS`.
             "args": [
                 "-noprofile",
                 "-c",
-                "MCPServerPS\\Start-MyMCP -Module E:\\repos\\MCPServerPS\\scripts\\tools.psm1"
+                "MCPServerPS\\Start-MyMCP -Name MCPServerPS -Module E:\\repos\\MCPServerPS\\scripts\\tools.psm1"
             ]
         }
     },

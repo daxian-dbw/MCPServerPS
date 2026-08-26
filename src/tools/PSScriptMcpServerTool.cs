@@ -35,6 +35,8 @@ public class PSScriptMcpServerTool : McpServerTool
 
     public override Tool ProtocolTool => _tool;
 
+    public override IReadOnlyList<object> Metadata => [];
+
     public override ValueTask<CallToolResult> InvokeAsync(RequestContext<CallToolRequestParams> request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -55,8 +57,7 @@ public class PSScriptMcpServerTool : McpServerTool
             }
         }
 
-        ILoggerProvider loggerProvider = request.Server.AsClientLoggerProvider();
-        ILogger logger = loggerProvider.CreateLogger(_tool.Name);
+        ILogger logger = StreamHandler.CreateLogger(_tool.Name);
         StreamHandler streamHandler = new(logger);
 
         try

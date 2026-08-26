@@ -12,7 +12,7 @@ namespace MCPServerPS.Tools;
 
 internal class PSToolUtils
 {
-    internal static Dictionary<string, PSObject> ConvertArgs(PowerShell pwsh, IReadOnlyDictionary<string, JsonElement> argDict)
+    internal static Dictionary<string, PSObject> ConvertArgs(PowerShell pwsh, IDictionary<string, JsonElement> argDict)
     {
         Dictionary<string, PSObject> realArgs = null;
         if (argDict is { })

@@ -29,6 +29,8 @@ public class PSModuleMcpServerTool : McpServerTool
 
     public override Tool ProtocolTool => _tool;
 
+    public override IReadOnlyList<object> Metadata => [];
+
     public override ValueTask<CallToolResult> InvokeAsync(RequestContext<CallToolRequestParams> request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -115,10 +117,9 @@ public class ModuleToolsMetadata
 
     internal Collection<PSObject> InvokeFunction(string funcName, RequestContext<CallToolRequestParams> request)
     {
-        IReadOnlyDictionary<string, JsonElement> argDict = request.Params?.Arguments;
+        IDictionary<string, JsonElement> argDict = request.Params?.Arguments;
 
-        ILoggerProvider loggerProvider = request.Server.AsClientLoggerProvider();
-        ILogger logger = loggerProvider.CreateLogger(funcName);
+        ILogger logger = StreamHandler.CreateLogger(funcName);
         StreamHandler streamHandler = new(logger);
 
         // We don't support parallel tool calling for function tools exposed from a module.

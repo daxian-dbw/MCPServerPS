@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 using System.Management.Automation;
@@ -17,6 +18,10 @@ public class MyMCPCommand : PSCmdlet
     private const string ScriptToolSet = nameof(ScriptRoot);
     private const string ModuleToolSet = nameof(Module);
 
+    // Used as ServerInfo.Name so each configured instance gets a stable, distinguishable identity.
+    [Parameter(Mandatory = true)]
+    public string Name { get; set; }
+
     [Parameter(Mandatory = true, ParameterSetName = ScriptToolSet)]
     public string ScriptRoot { get; set; }
 
@@ -26,7 +31,8 @@ public class MyMCPCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         MarkPowerShellAsRunningInServerSide();
-        Task mcpTask = Task.Run(async () => await StartMCPServer(ParameterSetName, ScriptRoot ?? Module));
+        string version = MyInvocation.MyCommand.Module.Version.ToString();
+        Task mcpTask = Task.Run(async () => await StartMCPServer(Name, version, ParameterSetName, ScriptRoot ?? Module));
         mcpTask.GetAwaiter().GetResult();
     }
 
@@ -44,7 +50,7 @@ public class MyMCPCommand : PSCmdlet
         property.SetValue(null, true);
     }
 
-    private static async Task StartMCPServer(string parameterSet, string scriptRootOrModule)
+    private static async Task StartMCPServer(string name, string version, string parameterSet, string scriptRootOrModule)
     {
         var builder = Microsoft.Extensions.Hosting.Host.CreateApplicationBuilder([]);
         builder.Logging.AddConsole(consoleLogOptions =>
@@ -54,7 +60,9 @@ public class MyMCPCommand : PSCmdlet
         });
 
         IMcpServerBuilder mcpBuilder = builder.Services
-            .AddMcpServer()
+            // Without this, the server name defaults to the host process's assembly name (e.g. "pwsh"),
+            // which VS Code prefers over the mcp.json label for display. See microsoft/vscode#299749.
+            .AddMcpServer(options => options.ServerInfo = new Implementation { Name = name, Version = version })
             .WithStdioServerTransport();
 
         if (parameterSet is DefaultSet)
