@@ -42,37 +42,41 @@ public class PSScriptMcpServerTool : McpServerTool
         ArgumentNullException.ThrowIfNull(request);
         cancellationToken.ThrowIfCancellationRequested();
 
-        Dictionary<string, PSObject> realArgs = null;
-        if (request.Params?.Arguments is { } argDict)
+        // Concurrent calls to this same tool instance would otherwise interleave commands/results on the shared _pwsh.
+        lock (_pwsh)
         {
-            realArgs = PSToolUtils.ConvertArgs(_pwsh, argDict);
-        }
-
-        _pwsh.AddCommand(_scriptPath);
-        if (realArgs is { })
-        {
-            foreach (var kvp in realArgs)
+            Dictionary<string, PSObject> realArgs = null;
+            if (request.Params?.Arguments is { } argDict)
             {
-                _pwsh.AddParameter(kvp.Key, kvp.Value);
+                realArgs = PSToolUtils.ConvertArgs(_pwsh, argDict);
             }
-        }
 
-        ILogger logger = StreamHandler.CreateLogger(_tool.Name);
-        StreamHandler streamHandler = new(logger);
+            _pwsh.AddCommand(_scriptPath);
+            if (realArgs is { })
+            {
+                foreach (var kvp in realArgs)
+                {
+                    _pwsh.AddParameter(kvp.Key, kvp.Value);
+                }
+            }
 
-        try
-        {
-            streamHandler.RegisterStreamEvents(_pwsh);
-            Collection<PSObject> results = _pwsh.Execute();
-            return ValueTask.FromResult(GetCallToolResult(results));
-        }
-        catch (Exception e)
-        {
-            return ValueTask.FromResult(PSToolUtils.GetErrorResult(_tool.Name, e));
-        }
-        finally
-        {
-            streamHandler.UnregisterStreamEvents(_pwsh);
+            ILogger logger = StreamHandler.CreateLogger(_tool.Name);
+            StreamHandler streamHandler = new(logger);
+
+            try
+            {
+                streamHandler.RegisterStreamEvents(_pwsh);
+                Collection<PSObject> results = _pwsh.Execute();
+                return ValueTask.FromResult(GetCallToolResult(results));
+            }
+            catch (Exception e)
+            {
+                return ValueTask.FromResult(PSToolUtils.GetErrorResult(_tool.Name, e));
+            }
+            finally
+            {
+                streamHandler.UnregisterStreamEvents(_pwsh);
+            }
         }
     }
 

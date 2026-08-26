@@ -15,6 +15,8 @@
     <!-- Real PowerShell runtime, needed since tests run under the test host, not inside pwsh.exe. Pinned to 7.4.x to match the net8.0 target. -->
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.19" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.9.0" />
+    <!-- Satisfies RequestContext<CallToolRequestParams>'s McpServer argument without a running server, same as the ModelContextProtocol SDK's own tests. -->
+    <PackageReference Include="Moq" Version="4.20.72" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +25,7 @@
 
   <ItemGroup>
     <None Include="Unit\Fixtures\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Component\Fixtures\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
