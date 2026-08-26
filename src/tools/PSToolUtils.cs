@@ -163,6 +163,13 @@ internal class PSToolUtils
 
     private static T ValueOf<T>(dynamic value)
     {
+        // LanguagePrimitives.ConvertTo coerces null per PowerShell's own null-conversion rules (e.g. null -> ""
+        // for string), which would defeat the missing-description "?? throw" checks below if not special-cased.
+        if (value is null)
+        {
+            return default;
+        }
+
         if (value is T ret)
         {
             return ret;

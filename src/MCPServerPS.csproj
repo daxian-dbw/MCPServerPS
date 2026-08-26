@@ -24,4 +24,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="MCPServerPS.Tests" />
+  </ItemGroup>
+
 </Project>
