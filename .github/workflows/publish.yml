@@ -20,7 +20,11 @@ permissions:
   packages: write
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
   build-and-publish:
+    needs: test
     runs-on: ubuntu-latest
 
     env:
