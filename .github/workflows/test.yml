@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        # windows-latest covers the Windows-only ExecutionPolicy branch in
+        # PSScriptMcpServerTool/ModuleToolsMetadata that ubuntu-latest can't exercise.
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore test/MCPServerPS.Tests.csproj
+
+    - name: Run tests
+      run: dotnet test test/MCPServerPS.Tests.csproj --no-restore
