@@ -7,7 +7,7 @@ The module exposes the `Start-MyMCP` cmdlet, which starts the MCP server and dyn
 
 **Benefits of shipping an MCP server as a PowerShell module:**
 
-- Small size: 3.35 MB. Only the .NET MCP SDK assemblies are required.
+- Small size: 5.17 MB. Only the .NET MCP SDK assemblies are required.
 - Availability: easy to distribute and install via PowerShell Gallery across platforms.
 - Flexible: expose C# tools, `.ps1` script tools, or module function tools.
 - For an MCP server that needs PowerShell features, the runtime is naturally available (runs in `pwsh.exe`), so no need to ship PowerShell SDK assemblies.
