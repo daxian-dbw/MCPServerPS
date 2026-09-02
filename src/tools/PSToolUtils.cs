@@ -120,7 +120,7 @@ internal class PSToolUtils
         {
             ParameterMetadata paramInfo = commandInfo.Parameters[ValueOf<string>(parameter.name)];
             string paramDescription = ValueOf<string>(parameter.description?[0]?.Text)
-                ?? throw new InvalidDataException($"No description found for the parameter '{paramInfo.Name}'.");
+                ?? throw new InvalidDataException($"No description found for the parameter '{paramInfo.Name}' for '{name}'.");
 
             var paramAttr = paramInfo.Attributes.OfType<ParameterAttribute>().FirstOrDefault();
             var paramType = paramInfo.ParameterType == typeof(SwitchParameter)
